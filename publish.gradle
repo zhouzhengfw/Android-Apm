@@ -8,7 +8,7 @@ uploadArchives {
         pom.version = "1.0.0" // 版本号
         pom.packaging = "aar"//
         // 配置本地仓库路径，项目根目录下
-        repository(url: "file:///Users/zhouzheng/Documents/GitHub/android-apm")
+        repository(url: "file:////Users/zhouzheng/StudioProjects/Android-Apm")
         //github上的仓库
 //        repository(url: "https://raw.githubusercontent.com/zhouzhengfw/Android-Apm/master")
     }
