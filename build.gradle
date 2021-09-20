@@ -7,6 +7,10 @@ buildscript {
         maven {
             url 'https://maven.fabric.io/public'
         }
+        maven {
+            url "https://raw.githubusercontent.com/zhouzhengfw/Android-Apm/master"
+        }
+
 
     }
     dependencies {
@@ -28,6 +32,9 @@ allprojects {
         maven { url "https://jitpack.io" }
         google()
         maven {url 'https://maven.aliyun.com/repository/public'}
+        maven {
+            url "https://raw.githubusercontent.com/zhouzhengfw/Android-Apm/master"
+        }
     }
 }
 
