@@ -8,7 +8,7 @@ buildscript {
             url 'https://maven.fabric.io/public'
         }
         maven {
-            url "https://raw.githubusercontent.com/zhouzhengfw/Android-Apm/master"
+            url "https://raw.githubusercontent.com/zhouzhengfw/Android-Apm/main"
         }
 
 
