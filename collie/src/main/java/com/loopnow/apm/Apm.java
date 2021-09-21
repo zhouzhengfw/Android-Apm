@@ -1,5 +1,15 @@
 package com.loopnow.apm;
 
+import static com.loopnow.apm.config.IssueType.ACTIVITYLAUNCH;
+import static com.loopnow.apm.config.IssueType.ANR;
+import static com.loopnow.apm.config.IssueType.APPLAUNCH;
+import static com.loopnow.apm.config.IssueType.BATTERYCOST;
+import static com.loopnow.apm.config.IssueType.FPS;
+import static com.loopnow.apm.config.IssueType.KOOM;
+import static com.loopnow.apm.config.IssueType.LEAK;
+import static com.loopnow.apm.config.IssueType.MEMORYCOST;
+import static com.loopnow.apm.config.IssueType.TRAFFIC;
+
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
@@ -13,6 +23,10 @@ import com.kwai.koom.javaoom.monitor.OOMHprofUploader;
 import com.kwai.koom.javaoom.monitor.OOMMonitor;
 import com.loopnow.apm.battery.BatteryInfo;
 import com.loopnow.apm.battery.BatteryStatsTracker;
+import com.loopnow.apm.config.ApmConfig;
+import com.loopnow.apm.config.Issue;
+import com.loopnow.apm.config.IssueType;
+import com.loopnow.apm.config.PluginListener;
 import com.loopnow.apm.core.ActivityStack;
 import com.loopnow.apm.core.CollieHandlerThread;
 import com.loopnow.apm.debug.DebugHelper;
@@ -25,6 +39,9 @@ import com.loopnow.apm.mem.koom.CommonInitTask;
 import com.loopnow.apm.startup.LauncherTracker;
 import com.loopnow.apm.trafficstats.ITrackTrafficStatsListener;
 import com.loopnow.apm.trafficstats.TrafficStatsTracker;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,7 +59,7 @@ public class Apm {
     private BatteryStatsTracker.IBatteryListener mIBatteryListener;
     private KoomTrack.IKoomTrackListener mIKoomTrackListener;
 
-    private List<ApmListener> mApmListeners = new ArrayList<>();
+    private List<PluginListener> mApmListeners = new ArrayList<>();
     private HashSet<Application.ActivityLifecycleCallbacks> mActivityLifecycleCallbacks = new HashSet<>();
 
     private Apm() {
@@ -54,14 +71,29 @@ public class Apm {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-
+                        JSONObject jsonObject = new JSONObject();
                         if (currentDropFrame > 1)
                             DebugHelper.getInstance().update("Current fps " + currentFps +
                                     "\n lostFrame " + currentDropFrame + " \n1s average fps " + averageFps
                                     + " \ncostTime " + currentCostMils);
 
-                        for (ApmListener apmListener : mApmListeners) {
-                            apmListener.onFpsTrack(activity, currentCostMils, currentDropFrame, isInFrameDraw, averageFps);
+                        Issue issue = new Issue();
+                        issue.setType(FPS.getType());
+
+                        JSONObject info = new JSONObject();
+                        try {
+                            info.put("activity",activity.getClass().getName());
+                            info.put("currentCostMils",currentCostMils);
+                            info.put("currentDropFrame",currentDropFrame);
+                            info.put("isInFrameDraw",isInFrameDraw);
+                            info.put("averageFps",averageFps);
+                            issue.setContent(info);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        for (PluginListener apmListener : mApmListeners) {
+                            apmListener.onReportIssue(issue);
                         }
                     }
 
@@ -70,8 +102,20 @@ public class Apm {
 
             @Override
             public void onANRAppear(Activity activity) {
-                for (ApmListener apmListener : mApmListeners) {
-                    apmListener.onANRAppear(activity);
+                Issue issue = new Issue();
+                issue.setType(ANR.getType());
+
+                JSONObject info = new JSONObject();
+                try {
+                    info.put("activity",activity.getClass().getName());
+
+                    issue.setContent(info);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                for (PluginListener apmListener : mApmListeners) {
+                    apmListener.onReportIssue(issue);
                 }
             }
         };
@@ -79,8 +123,22 @@ public class Apm {
         mTrackTrafficStatsListener = new ITrackTrafficStatsListener() {
             @Override
             public void onTrafficStats(Activity activity, long value) {
-                for (ApmListener apmListener : mApmListeners) {
-                    apmListener.onTrafficStats(activity, value);
+
+                Issue issue = new Issue();
+                issue.setType(TRAFFIC.getType());
+
+                JSONObject info = new JSONObject();
+                try {
+                    info.put("activity",activity.getClass().getName());
+                    info.put("value",value);
+
+                    issue.setContent(info);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                for (PluginListener apmListener : mApmListeners) {
+                    apmListener.onReportIssue(issue);
                 }
             }
         };
@@ -89,8 +147,20 @@ public class Apm {
             @Override
             public void onLeakActivity(String activity, int count) {
                 Log.v("Collie", "memoryLeak " + activity + " count " + count);
-                for (ApmListener apmListener : mApmListeners) {
-                    apmListener.onLeakActivity(activity, count);
+                Issue issue = new Issue();
+                issue.setType(LEAK.getType());
+
+                JSONObject info = new JSONObject();
+                try {
+                    info.put("activity",activity.getClass().getName());
+                    info.put("count",count);
+                    issue.setContent(info);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                for (PluginListener apmListener : mApmListeners) {
+                    apmListener.onReportIssue(issue);
                 }
             }
 
@@ -99,8 +169,21 @@ public class Apm {
 //                Log.v("Collie", "内存  " + trackMemoryInfo.procName + " java内存  "
 //                        + trackMemoryInfo.appMemory.dalvikPss + " native内存  " +
 //                        trackMemoryInfo.appMemory.nativePss);
-                for (ApmListener apmListener : mApmListeners) {
-                    apmListener.onCurrentMemoryCost(trackMemoryInfo);
+                Issue issue = new Issue();
+                issue.setType(MEMORYCOST.getType());
+
+                JSONObject info = new JSONObject();
+                try {
+                    info.put("procName",trackMemoryInfo.procName);
+                    info.put("javaHeap",trackMemoryInfo.appMemory.dalvikPss);
+                    info.put("nativeHeap",trackMemoryInfo.appMemory.nativePss);
+                    issue.setContent(info);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                for (PluginListener apmListener : mApmListeners) {
+                    apmListener.onReportIssue(issue);
                 }
             }
         };
@@ -108,28 +191,53 @@ public class Apm {
             @Override
             public void onAppColdLaunchCost(long duration ,String processName) {
 //                Log.v("Collie", "cold " + duration);
-                for (ApmListener apmListener : mApmListeners) {
-                    apmListener.onAppColdLaunchCost(duration,processName);
+                Issue issue = new Issue();
+                issue.setType(APPLAUNCH.getType());
+
+                JSONObject info = new JSONObject();
+                try {
+                    info.put("procName",processName);
+                    info.put("duration",duration);
+                    issue.setContent(info);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                for (PluginListener apmListener : mApmListeners) {
+                    apmListener.onReportIssue(issue);
                 }
             }
 
             @Override
             public void onActivityLaunchCost(Activity activity, long duration,boolean finishNow) {
-////                Log.v("Collie", "activity启动耗时 " + activity + " " + duration);
-//                if(duration>800){
-//                    Toast.makeText(activity,"耗时 "+duration+"ms",Toast.LENGTH_SHORT).show();
-//                }
-                for (ApmListener apmListener : mApmListeners) {
-                    apmListener.onActivityLaunchCost(activity, duration,finishNow);
+                Issue issue = new Issue();
+                issue.setType(ACTIVITYLAUNCH.getType());
+
+                JSONObject info = new JSONObject();
+                try {
+                    info.put("activity",activity.getClass().getName());
+                    info.put("duration",duration);
+                    issue.setContent(info);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
             }
         };
 
         mIBatteryListener = new BatteryStatsTracker.IBatteryListener() {
             @Override
             public void onBatteryCost(BatteryInfo batteryInfo) {
-                for (ApmListener apmListener : mApmListeners) {
-                    apmListener.onBatteryCost(batteryInfo);
+                Issue issue = new Issue();
+                issue.setType(BATTERYCOST.getType());
+
+                JSONObject info = new JSONObject();
+                try {
+                    info.put("charging",batteryInfo.charging);
+                    info.put("cost",batteryInfo.cost);
+                    issue.setContent(info);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         };
@@ -142,7 +250,16 @@ public class Apm {
 
             @Override
             public void onReportUploader(File file, String content) {
+                Issue issue = new Issue();
+                issue.setType(KOOM.getType());
 
+                JSONObject info = new JSONObject();
+                try {
+                    info.put("content",content);
+                    issue.setContent(info);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         };
     }
@@ -222,50 +339,50 @@ public class Apm {
     };
 
     public void init(@NonNull Application application,
-                     final Config config,
-                     final ApmListener listener) {
+                     final ApmConfig config,
+                     final PluginListener listener) {
         application.registerActivityLifecycleCallbacks(mActivityLifecycleCallback);
         mApmListeners.add(listener);
 
-        if (config.getUserTrafficTrack()) {
+        if (config.trafficTrace) {
             TrafficStatsTracker.getInstance().addTackTrafficStatsListener(mTrackTrafficStatsListener);
             TrafficStatsTracker.getInstance().startTrack(application);
         }
-        if (config.getUserMemTrack()) {
+        if (config.memTrace) {
             MemoryLeakTrack.getInstance().startTrack(application);
             MemoryLeakTrack.getInstance().addOnMemoryLeakListener(mITrackMemoryLeakListener);
         }
-        if (config.getUserFpsTrack()) {
+        if (config.fpsTrace) {
             FpsTracker.getInstance().setTrackerListener(mITrackListener);
             FpsTracker.getInstance().startTrack(application);
         }
-        if (config.getShowDebugView()) {
+        if (config.showDebugView) {
             DebugHelper.getInstance().startTrack(application);
         }
 
-        if (config.getUserBatteryTrack()) {
+        if (config.batteryTrace) {
             BatteryStatsTracker.getInstance().addBatteryListener(mIBatteryListener);
             BatteryStatsTracker.getInstance().startTrack(application);
         }
 
-        if (config.getUserStartUpTrack()) {
+        if (config.startUpTrace) {
             LauncherTracker.getInstance().addLaunchTrackListener(mILaunchTrackListener);
             LauncherTracker.getInstance().startTrack(application);
         }
 
 
-        if (config.getUserKoom()) {
+        if (config.koom) {
             CommonInitTask.INSTANCE.init(application);
             KoomTrack.getInstance().addOOMHprofUploader(mIKoomTrackListener);
             KoomTrack.getInstance().startTrack(application);
         }
     }
 
-    public void registerCollieListener(ApmListener listener) {
+    public void registerApmListener(PluginListener listener) {
         mApmListeners.add(listener);
     }
 
-    public void unRegisterCollieListener(ApmListener listener) {
+    public void unRegisterApmListener(PluginListener listener) {
         mApmListeners.remove(listener);
     }
 

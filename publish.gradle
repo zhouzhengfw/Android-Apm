@@ -1,15 +1,15 @@
 //发布Maven配置
-apply plugin: "maven"
-
-uploadArchives {
-    repositories.mavenDeployer {
-        pom.groupId = "com.loopnow" // 唯一标识（通常为模块包名，也可以任意）
-        pom.artifactId = "apm"//项目名称（通常为类库模块名称，也可以任意）
-        pom.version = "1.0.1" // 版本号
-        pom.packaging = "aar"//
-        // 配置本地仓库路径，项目根目录下
-        repository(url: "file:////Users/zhouzheng/StudioProjects/Android-Apm")
-        //github上的仓库
-//        repository(url: "https://raw.githubusercontent.com/zhouzhengfw/Android-Apm/master")
-    }
-}
+//apply plugin: "maven"
+//
+//uploadArchives {
+//    repositories.mavenDeployer {
+//        pom.groupId = "com.loopnow" // 唯一标识（通常为模块包名，也可以任意）
+//        pom.artifactId = "apm"//项目名称（通常为类库模块名称，也可以任意）
+//        pom.version = "1.0.1" // 版本号
+//        pom.packaging = "aar"//
+//        // 配置本地仓库路径，项目根目录下
+//        repository(url: "file:////Users/zhouzheng/StudioProjects/Android-Apm")
+//        //github上的仓库
+////        repository(url: "https://raw.githubusercontent.com/zhouzhengfw/Android-Apm/master")
+//    }
+//}
