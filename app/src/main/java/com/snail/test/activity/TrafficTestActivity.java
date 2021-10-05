@@ -1,4 +1,4 @@
-package com.snail.labaffinity.activity;
+package com.snail.test.activity;
 
 import android.net.http.SslError;
 import android.os.Bundle;

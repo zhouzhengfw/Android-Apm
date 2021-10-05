@@ -1,11 +1,11 @@
-package com.snail.labaffinity.service;
+package com.snail.test.service;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
 
-import com.snail.labaffinity.utils.LogUtils;
+import com.snail.test.utils.LogUtils;
 
 /**
  * Author: hzlishang

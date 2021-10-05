@@ -1,16 +1,13 @@
-package com.snail.labaffinity.activity;
+package com.snail.test.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.widget.TextView;
 
 
-import com.snail.labaffinity.R;
-import com.snail.labaffinity.utils.LogUtils;
-
-import org.w3c.dom.Text;
+import com.snail.test.R;
+import com.snail.test.utils.LogUtils;
 
 
 public class SplashActivity extends BaseActivity {

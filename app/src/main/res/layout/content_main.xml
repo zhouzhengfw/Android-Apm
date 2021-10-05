@@ -26,22 +26,22 @@
                 android:id="@+id/activity_start"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="测试Activity启动耗时"/>
+                android:text="LauncherActivityCost"/>
             <Button
                 android:id="@+id/first"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="测试内存泄漏"/>
+                android:text="Mem Leak"/>
             <Button
                 android:id="@+id/second"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="测试流量"/>
+                android:text="Traffics"/>
             <Button
                 android:id="@+id/third"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="测试帧率"/>
+                android:text="FPS"/>
 
         </LinearLayout>
     </ScrollView>

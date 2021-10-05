@@ -178,9 +178,7 @@ public class LauncherTracker implements ITracker {
     @Override
     public void startTrack(Application application) {
         Apm.getInstance().addActivityLifecycleCallbacks(mSimpleActivityLifecycleCallbacks);
-        mIsColdStarUp = isForegroundProcess(application);
-        Log.v("Collie", "mIsColdStarUp " + mIsColdStarUp);
-    }
+        mIsColdStarUp = isForegroundProcess(application);}
 
     @Override
     public void pauseTrack(Application application) {

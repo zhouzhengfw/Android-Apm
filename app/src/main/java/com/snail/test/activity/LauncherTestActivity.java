@@ -1,18 +1,10 @@
-package com.snail.labaffinity.activity;
+package com.snail.test.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.snail.labaffinity.app.MyButton;
-import com.snail.labaffinity.databinding.ActivitySecondBinding;
-import com.snail.labaffinity.utils.LogUtils;
+import com.snail.test.app.MyButton;
+import com.snail.test.databinding.ActivitySecondBinding;
 
 
 public class LauncherTestActivity extends BaseActivity {

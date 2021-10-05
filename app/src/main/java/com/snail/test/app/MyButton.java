@@ -1,10 +1,9 @@
-package com.snail.labaffinity.app;
+package com.snail.test.app;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.widget.Button;
 
 public class MyButton extends androidx.appcompat.widget.AppCompatButton {
     public MyButton(Context context) {

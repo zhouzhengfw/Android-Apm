@@ -1,4 +1,4 @@
-package com.snail.labaffinity.adapter;
+package com.snail.test.adapter;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.snail.labaffinity.R;
+import com.snail.test.R;
 
 /**
  * Author: lishang

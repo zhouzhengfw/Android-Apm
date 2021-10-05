@@ -1,8 +1,8 @@
-package com.snail.labaffinity.utils;
+package com.snail.test.utils;
 
 import android.app.Application;
 
-import com.snail.labaffinity.app.LabApplication;
+import com.snail.test.app.LabApplication;
 
 /**
  * Author: hzlishang

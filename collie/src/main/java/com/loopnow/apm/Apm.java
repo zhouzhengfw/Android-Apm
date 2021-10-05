@@ -71,7 +71,6 @@ public class Apm {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        JSONObject jsonObject = new JSONObject();
                         if (currentDropFrame > 1)
                             DebugHelper.getInstance().update("Current fps " + currentFps +
                                     "\n lostFrame " + currentDropFrame + " \n1s average fps " + averageFps
@@ -79,7 +78,7 @@ public class Apm {
 
                         Issue issue = new Issue();
                         issue.setType(FPS.getType());
-
+                        Log.e("FPS",""+FPS.getType());
                         JSONObject info = new JSONObject();
                         try {
                             info.put("activity",activity.getClass().getName());
@@ -123,7 +122,7 @@ public class Apm {
         mTrackTrafficStatsListener = new ITrackTrafficStatsListener() {
             @Override
             public void onTrafficStats(Activity activity, long value) {
-
+                Log.e("onTrafficStats",""+value);
                 Issue issue = new Issue();
                 issue.setType(TRAFFIC.getType());
 
@@ -166,9 +165,7 @@ public class Apm {
 
             @Override
             public void onCurrentMemoryCost(TrackMemoryInfo trackMemoryInfo) {
-//                Log.v("Collie", "内存  " + trackMemoryInfo.procName + " java内存  "
-//                        + trackMemoryInfo.appMemory.dalvikPss + " native内存  " +
-//                        trackMemoryInfo.appMemory.nativePss);
+
                 Issue issue = new Issue();
                 issue.setType(MEMORYCOST.getType());
 
@@ -190,10 +187,9 @@ public class Apm {
         mILaunchTrackListener = new LauncherTracker.ILaunchTrackListener() {
             @Override
             public void onAppColdLaunchCost(long duration ,String processName) {
-//                Log.v("Collie", "cold " + duration);
                 Issue issue = new Issue();
                 issue.setType(APPLAUNCH.getType());
-
+                Log.e("onAppColdLaunchCost",duration+"");
                 JSONObject info = new JSONObject();
                 try {
                     info.put("procName",processName);
@@ -212,6 +208,7 @@ public class Apm {
             public void onActivityLaunchCost(Activity activity, long duration,boolean finishNow) {
                 Issue issue = new Issue();
                 issue.setType(ACTIVITYLAUNCH.getType());
+                Log.e("onActivityLaunchCost",duration+"");
 
                 JSONObject info = new JSONObject();
                 try {
@@ -220,6 +217,9 @@ public class Apm {
                     issue.setContent(info);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+                for (PluginListener apmListener : mApmListeners) {
+                    apmListener.onReportIssue(issue);
                 }
 
             }
@@ -259,6 +259,9 @@ public class Apm {
                     issue.setContent(info);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+                for (PluginListener apmListener : mApmListeners) {
+                    apmListener.onReportIssue(issue);
                 }
             }
         };

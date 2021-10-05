@@ -1,17 +1,16 @@
-package com.snail.labaffinity.activity;
+package com.snail.test.activity;
 
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.snail.labaffinity.databinding.ActivitySecondBinding;
-import com.snail.labaffinity.utils.LogUtils;
+import com.snail.test.databinding.ActivitySecondBinding;
+import com.snail.test.utils.LogUtils;
 
 
 public class FpsTestActivity extends BaseActivity {

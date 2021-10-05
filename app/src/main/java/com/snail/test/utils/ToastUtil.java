@@ -1,4 +1,4 @@
-package com.snail.labaffinity.utils;
+package com.snail.test.utils;
 
 import android.widget.Toast;
 

@@ -77,7 +77,6 @@ public class TrafficStatsTracker implements ITracker {
         mCurrentStats = TrafficStats.getUidRxBytes(Process.myUid());
     }
 
-    //  以pause为中断点
     public void markActivityPause(Activity activity) {
         TrafficStatsItem item = mHashMap.get(activity);
         if (item != null) {
@@ -85,7 +84,6 @@ public class TrafficStatsTracker implements ITracker {
         }
     }
 
-    //   防止泄露
     public void markActivityDestroy(Activity activity) {
         TrafficStatsItem item = mHashMap.get(activity);
         if (item != null) {

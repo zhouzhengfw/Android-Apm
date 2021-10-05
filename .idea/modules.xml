@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android-apm.iml" filepath="$PROJECT_DIR$/.idea/modules/android-apm.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android-apm.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android-apm.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/collie/android-apm.collie.iml" filepath="$PROJECT_DIR$/.idea/modules/collie/android-apm.collie.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Android-Apm.iml" filepath="$PROJECT_DIR$/.idea/modules/Android-Apm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Android-Apm.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Android-Apm.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/collie/Android-Apm.collie.iml" filepath="$PROJECT_DIR$/.idea/modules/collie/Android-Apm.collie.iml" />
     </modules>
   </component>
 </project>

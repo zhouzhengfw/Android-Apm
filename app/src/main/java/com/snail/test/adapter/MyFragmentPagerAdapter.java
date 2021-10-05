@@ -1,4 +1,4 @@
-package com.snail.labaffinity.adapter;
+package com.snail.test.adapter;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
